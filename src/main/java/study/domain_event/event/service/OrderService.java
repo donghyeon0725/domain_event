@@ -4,11 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import study.domain_event.event.aop.Events;
 import study.domain_event.event.domain.Delivery;
 import study.domain_event.event.domain.Order;
 import study.domain_event.event.event.DeliveryEvent;
 import study.domain_event.event.repository.DeliveryRepository;
 import study.domain_event.event.repository.OrderRepository;
+
+import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
@@ -58,6 +61,21 @@ public class OrderService {
         orderRepository.save(order);
 
         order.startDel();
+
+        return order;
+    }
+
+    @Transactional
+    public Order createOrderWithEventsAndQueue() {
+        Order order = Order.builder().name("주문").build();
+        orderRepository.save(order);
+
+        order.startDel();
+
+        Order newOrder = Order.builder().name("주문").build();
+        Events.raise(new DeliveryEvent(newOrder));
+
+        orderRepository.save(newOrder);
 
         return order;
     }

@@ -71,6 +71,15 @@ class OrderServiceTest {
     }
 
 
+    @Test
+    @DisplayName("상품 주문 테스트")
+    void test5() {
+        Order order = orderService.createOrderWithEventsAndQueue();
+        Delivery findDelivery = deliveryRepository.findByOrder(order);
+
+        assertNotNull(findDelivery);
+    }
+
 
 
 
