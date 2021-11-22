@@ -6,6 +6,5 @@ import study.domain_event.event.domain.Order;
 
 public interface DeliveryRepository extends JpaRepository<Delivery, Long> {
 
-    
     Delivery findByOrder(Order order);
 }
